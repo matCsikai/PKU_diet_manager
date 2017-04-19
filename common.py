@@ -27,11 +27,12 @@ def is_int(number):
         return False
 
 
-def search_by_id(table, id_):
-    row_to_remove = [i for i, j in enumerate(table) if id_ in j]
-    if not row_to_remove:
-        ui.print_error_message("There is no such ID in the table.")
-    return row_to_remove[0]
+def search(database, data, column=1):
+    result = []
+    for row in database:
+        if data in row[column]:
+            result.append(column[0], column[1])
+    return result
 
 
 def check_date_for_validity(year, month, day):
