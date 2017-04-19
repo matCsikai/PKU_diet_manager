@@ -2,6 +2,8 @@
 
 import sys
 import os
+import data_manager
+import common
 import ui  # User Interface
 from importlib.machinery import SourceFileLoader
 main_path = os.path.dirname(os.path.abspath(__file__))
@@ -39,6 +41,7 @@ def handle_menu():
 
 def main():
     usa_database = data_manager.import_csv_file()
+    print(common.search(usa_database, "Apple"))     # just for test
     while True:
         handle_menu()
         try:
