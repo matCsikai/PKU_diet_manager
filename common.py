@@ -27,11 +27,15 @@ def is_int(number):
         return False
 
 
+# find the given data from different databases
+# input: database, data to search, column number
+# output: list of found data, ID, name
+# May need modification for Daily Menu option
 def search(database, data, column=1):
     result = []
     for row in database:
         if data in row[column]:
-            result.append(column[0], column[1])
+            result.append(row[0], row[1])
     return result
 
 
