@@ -1,4 +1,10 @@
-# Do not modify this file
+import csv
+
+
+def import_csv_file(file_name="food_database.csv"):
+    with open(file_name, newline="") as csv_file:
+        imported_database = csv.reader(csv_file, delimiter=',', quotechar="|")
+    return imported_database
 
 
 # read file into a @table
