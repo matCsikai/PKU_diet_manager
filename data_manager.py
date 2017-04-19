@@ -2,9 +2,12 @@ import csv
 
 
 def import_csv_file(file_name="food_database.csv"):
+    database_as_list = []
     with open(file_name, newline="") as csv_file:
         imported_database = csv.reader(csv_file, delimiter=',', quotechar="|")
-    return imported_database
+        for row in imported_database:
+            database_as_list.append(str(row))
+    return database_as_list
 
 
 # read file into a @table
