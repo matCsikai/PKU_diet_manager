@@ -1,5 +1,3 @@
-# Do not modify this file
-# run the program (the ERP software) by this file from the terminal from thd root directory of this project
 
 
 import sys
@@ -7,35 +5,23 @@ import os
 import ui  # User Interface
 from importlib.machinery import SourceFileLoader
 main_path = os.path.dirname(os.path.abspath(__file__))
-# Store module
-store = SourceFileLoader("store", main_path + "/store/store.py").load_module()
-# Human Resources module
-hr = SourceFileLoader("hr", main_path + "/hr/hr.py").load_module()
-# Tool manager module
-tool_manager = SourceFileLoader("tool_manager", main_path + "/tool_manager/tool_manager.py").load_module()
-# Accounting module
-accounting = SourceFileLoader("accounting", main_path + "/accounting/accounting.py").load_module()
-# Selling module
-selling = SourceFileLoader("selling", main_path + "/selling/selling.py").load_module()
-# Customer Relationship Management (CRM) module
-crm = SourceFileLoader("crm", main_path + "/crm/crm.py").load_module()
+# Tolerance input
+tolerance_input = SourceFileLoader("tolerance_input", "tolerance_input.py").load_module()
+# My recipes
+my_recipes = SourceFileLoader("my_recipes", "my_recipes.py").load_module()
+# Daily menu
+daily_menu = SourceFileLoader("daily_menu", "daily_menu.py").load_module()
 
 
 def choose():
     inputs = ui.get_inputs(["Please enter a number: "], "")
     option = inputs[0]
     if option == "1":
-        store.start_module()
+        tolerance_input.start_module()
     elif option == "2":
-        hr.start_module()
+        my_recipes.start_module()
     elif option == "3":
-        tool_manager.start_module()
-    elif option == "4":
-        accounting.start_module()
-    elif option == "5":
-        selling.start_module()
-    elif option == "6":
-        crm.start_module()
+        daily_menu.start_module()
     elif option == "0":
         sys.exit(0)
     else:
@@ -43,12 +29,9 @@ def choose():
 
 
 def handle_menu():
-    options = ["Store manager",
-               "Human resources manager",
-               "Tool manager",
-               "Accounting manager",
-               "Selling manager",
-               "Customer Relationship Management (CRM)"]
+    options = ["Tolerance input",
+               "My recipes",
+               "Daily menu"]
 
     ui.print_menu("Main menu", options, "Exit program")
 
