@@ -28,14 +28,16 @@ def is_int(number):
 
 
 # find the given data from different databases
-# input: database, data to search, column number
+# input: database, data to search
 # output: list of found data, ID, name
 # May need modification for Daily Menu option
-def search(database, data, column=1):
+def search(database, data):
     result = []
     for row in database:
-        if data in row[column]:
-            result.append(row[0], row[1])
+        if data in row:
+            recent_row = row.split(",")
+            result.append(recent_row[0])
+            result.append(recent_row[1])
     return result
 
 
