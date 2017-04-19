@@ -94,7 +94,7 @@ def get_inputs(list_labels, title):
     for question in list_labels:
         user_input = input(question)
         inputs.append(user_input)
-    return inputs
+    return inputs if len(inputs) > 1 else inputs[0]
 
 
 # This function needs to print an error message. (example: Error: @message)

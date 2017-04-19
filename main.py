@@ -16,12 +16,13 @@ daily_menu = SourceFileLoader("daily_menu", "daily_menu.py").load_module()
 def choose():
     inputs = ui.get_inputs(["Please enter a number: "], "")
     option = inputs[0]
+    tolerance = 500
     if option == "1":
-        tolerance_input.start_module()
+        tolerance = tolerance_input.start_module(tolerance)
     elif option == "2":
-        my_recipes.start_module()
+        my_recipes.start_module(tolerance)
     elif option == "3":
-        daily_menu.start_module()
+        daily_menu.start_module(tolerance)
     elif option == "0":
         sys.exit(0)
     else:
