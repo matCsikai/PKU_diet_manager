@@ -38,6 +38,7 @@ def handle_menu():
 
 
 def main():
+    usa_database = data_manager.import_csv_file()
     while True:
         handle_menu()
         try:
