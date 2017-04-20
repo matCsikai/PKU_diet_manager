@@ -25,6 +25,8 @@ def choose():
         my_recipes.start_module(tolerance)
     elif option == "3":
         daily_menu.start_module(tolerance)
+    elif option == "4":
+        common.handle_database_menu()
     elif option == "0":
         sys.exit(0)
     else:
@@ -34,14 +36,16 @@ def choose():
 def handle_menu():
     options = ["Tolerance input",
                "My recipes",
-               "Daily menu"]
+               "Daily menu",
+               "Search database"]
 
     ui.print_menu("Main menu", options, "Exit program")
 
 
+
+
+
 def main():
-    usa_database = data_manager.import_csv_file()
-    print(common.search(usa_database, "Apple"))     # just for test
     while True:
         handle_menu()
         try:
