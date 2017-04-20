@@ -103,6 +103,36 @@ def database_based_phe_calculation(food_data):
 
 
 def protein_based_phe_calculation(food_name, protein_content, measure, food_type="other"):
-    Fruit
+    pass
+
+
+def generate_random(table):
+    UNIQUE_ID_LENGTH = 8
+    ID_INDEX = 0
+    random.seed(a=int(time.time()), version=2)
+    generated_not_in_list = False
+
+    while not generated_not_in_list:
+        char = []
+        for _ in range(2):
+            char.append(random.choice(string.ascii_lowercase))
+            char.append(random.choice(string.ascii_uppercase))
+            char.append(random.choice(string.digits))
+
+        while len(char) < UNIQUE_ID_LENGTH:
+            special_character = random.choice(string.punctuation)
+            if special_character != ";":
+                char.append(special_character)
+            else:
+                continue
+
+        random.shuffle(char)
+        generated = ''.join(char)
+        generated_not_in_list = True
+        for line in table:
+            if line[ID_INDEX] == generated:
+                generated_not_in_list = False
+    return generated
+
 
 
