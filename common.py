@@ -5,9 +5,10 @@ import time
 import os
 from importlib.machinery import SourceFileLoader
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-
 # User interface module
 ui = SourceFileLoader("ui", current_file_path + "/ui.py").load_module()
+# data manager module
+data_manager = SourceFileLoader("data_manager", current_file_path + "/data_manager.py").load_module()
 
 
 def remove_by_id(table, id_):
@@ -32,12 +33,17 @@ def is_int(number):
 # output: list of found data, ID, name
 # May need modification for Daily Menu option
 def search(database, data):
+    ID = 0
+    FOOD = 1
+    WEIGHT = 2
+    MEASURE = 3
+    PHE_PER_MEAS = 4
+
     result = []
     for row in database:
         if data in row:
             recent_row = row.split(",")
-            result.append(recent_row[0])
-            result.append(recent_row[1])
+            result.append([recent_row[FOOD], recent_row[WEIGHT], recent_row[PHE_PER_MEAS]])
     return result
 
 
@@ -72,3 +78,24 @@ def check_date_for_validity(year, month, day):
 
     if len(error_msg) != 0:
         raise ValueError(error_msg)
+
+
+def handle_database_menu():
+    database_search = ui.get_inputs(["Please enter a food name: "], "Search in database")
+    usa_database = data_manager.import_csv_file()
+    search_results = search(usa_database, database_search)
+    menu_list = []
+    for i in search_results:
+        menu_list.append(i[0])
+    ui.print_menu("Search results:", menu_list, "Return to menu")
+    inputs = ui.get_inputs(["Please enter a number: "], "")
+    chosen_food = search_results[int(inputs[0]) - 1]
+    returned_phe_content = database_based_phe_calculation(chosen_food)
+    return (chosen_food, returned_phe_content)
+
+
+def database_based_phe_calculation(food_data,):
+    input_weight = float(ui.get_inputs(["Please enter the weight in grams: "], ""))
+    phe_content = ((input_weight * float(food_data[2][2:-2])) / float(food_data[1][2:-1])) * 1000
+    return phe_content
+
