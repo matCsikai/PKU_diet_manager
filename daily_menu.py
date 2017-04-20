@@ -68,7 +68,7 @@ def start_module(tolerance):
                 show_table(today_table)
                 print("\nYour PHA tolerance is {0} mg.\nYou consumed {1} mg PHA today.\nRemaining PHA today is {2} mg.\n".format(float(tolerance), sum_PHA, tolerance - sum_PHA))
             elif option == "2":
-                ui.print_error_message("This function is under constrution")
+                add_to_daily_menu(today_table)
             elif option == "3":
                 ui.print_error_message("This function is under constrution")
             elif option == "4":
@@ -84,3 +84,25 @@ def start_module(tolerance):
 def show_table(table):
     title_list = ["id", "food name", "quantity (g)", "measure", "PHA content", "year", "month", "day"]
     ui.print_table(table, title_list)
+
+def add_to_daily_menu(table):
+    food_PHA = common.handle_database_menu()
+    choosen_food = food_PHA[0]
+    PHA_content = str(int(food_PHA[1][0]))
+    quantity = str(food_PHA[1][1])
+    
+    id = common.generate_random(table)
+    title = "To add a new record, enter the following parameters: "
+    list_labels = ["Measure: ", "Year: ", "Month: ", "Day: "]
+    new_record_list = ui.get_inputs(list_labels, title)
+    # Check if numeric data was provided to Price and In_stock
+    #validate_user_entry(new_record_list)
+    new_record_list.insert(0, quantity)
+    new_record_list.insert(0, choosen_food[0].replace('"', ''))
+    new_record_list.insert(0, id)
+    new_record_list.insert(4, PHA_content)
+    table.append(new_record_list)
+    # data_manager.write_table_to_file('daily_menu.csv', table)
+    # data_manager.write_table_to_file(current_file_path + "/sellings.csv", table)
+    return table
+

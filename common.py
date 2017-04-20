@@ -99,7 +99,7 @@ def handle_database_menu():
 def database_based_phe_calculation(food_data):
     input_weight = float(ui.get_inputs(["Please enter the weight in grams: "], ""))
     phe_content = ((input_weight * float(food_data[2][2:-2])) / float(food_data[1][2:-1])) * 1000
-    return phe_content
+    return (phe_content, input_weight)
 
 
 def protein_based_phe_calculation(food_name, protein_content, measure, food_type="other"):
