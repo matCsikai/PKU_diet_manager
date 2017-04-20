@@ -89,6 +89,8 @@ def handle_database_menu():
         menu_list.append(i[0])
     ui.print_menu("Search results:", menu_list, "Return to menu")
     inputs = ui.get_inputs(["Please enter a number: "], "")
+    if inputs[0] == "0":
+        return None
     chosen_food = search_results[int(inputs[0]) - 1]
     returned_phe_content = database_based_phe_calculation(chosen_food)
     return (chosen_food, returned_phe_content)
