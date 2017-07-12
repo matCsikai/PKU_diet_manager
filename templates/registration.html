@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-1.12.4.js" defer></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" defer></script>
+</head>
+
+<body>
+    <div class="text-center registration-letters">
+        <h1>New registration</h1>
+
+        <div class="infomodal"  data-toggle="infomodal" data-target="#infomodal" role="dialog">
+            {% if info %}
+                <div id="infomodal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header modal-header-letters">
+                                <h4>Registration successful!</h4>
+                            </div>
+                            <div class="modal-body text-center">
+                                <a href="/login/" class="btn btn-info close-modal" role="button">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <form action="/registration/new" method="post">
+            <p>
+                <label for="new_user_name">Please enter your username</label>
+            </p>
+            <p>
+                <input name="new_user_name" id="new_user_name" maxlength="15" minlength="5" required autofocus>
+            </p>
+            <p>
+                <label for="new_password">Please enter your password</label>
+            </p>
+            <p>
+                <input name="new_password" type="password" id="new_password" maxlength="15" minlength="5" required>
+            </p>
+            <p>
+                <label for="confirm_password">Please confirm your password</label>
+            </p>
+            <p>
+                <input name="confirm_password" type="password" id="confirm_password" maxlength="15" minlength="5" required>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul class=flashes>
+                            {% for message in messages %}
+                                <div class="alert alert-warning alert-dismissable" role="alert" >
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>{{ message }}!</strong>
+                                </div>                    
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            </p>
+            <p>    
+                <input type="submit" value="Register user" class="btn-info">
+            </p>
+        </form>
+        <a href="/" class="btn-info">Cancel</a>
+    </div>
+
+</body>
+
+</html> 

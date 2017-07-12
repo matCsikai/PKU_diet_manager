@@ -102,3 +102,37 @@ def execute_dml_statement(statement, variables=None):
             except psycopg2.ProgrammingError as pe:
                 pass
     return result
+
+
+""""""
+
+
+def handle_database(command, data):
+    result = {}
+    #urllib.parse.uses_netloc.append('postgres')
+    #url = urllib.parse.urlparse(os.environ.get('DATABASE_URL'))
+    connection = establish_connection()
+    if connection == 'connection error':
+        result['result'] = 'Connection error. Server can not make a connection.'
+        return result
+    else:
+        try:
+            #connection.autocommit = True
+            cursor = connection.cursor()
+            query = cursor.mogrify(command, data)
+            cursor.execute(query)
+            if "SELECT" in command:
+                result['rows'] = cursor.fetchall()
+                result['row_count'] = cursor.rowcount
+            cursor.close()
+            connection.close()
+            result['result'] = 'success'
+        except Exception as exception_message:
+            result['result'] = exception_message
+        finally:
+            return result
+
+
+def handle_query(sql_query, data):
+    result = handle_database(sql_query, data)
+    return result

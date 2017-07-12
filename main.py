@@ -1,12 +1,14 @@
-from flask import Flask, render_template, redirect, request
-import sys
-import os
-import data_manager
-import common
-import ui  # User Interface
-from importlib.machinery import SourceFileLoader
-import requests
+#import sys
+#import os
+#import common
+#import ui  # User Interface
+#from importlib.machinery import SourceFileLoader
 import json
+from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify
+import werkzeug.security
+import requests
+import data_manager
+from datetime import datetime
 
 '''
 main_path = os.path.dirname(os.path.abspath(__file__))
@@ -22,10 +24,21 @@ daily_menu = SourceFileLoader("daily_menu", "daily_menu.py").load_module()
 app = Flask(__name__)
 API_KEY = 'AQ1fP3DgzdClqCBGxKFRCfrXu5yrjBJNFwBdfUIb'
 
+app.secret_key = 'A0Zr98j/3yX R~XHa!jmN]LWX/,?RT'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    loggedin = False
+    username = ""
+    user_id = ""
+    if 'username' in session:
+        loggedin = True
+        username = session['username']
+        get_id_query = """SELECT id FROM diet_users WHERE username=%s"""
+        data = (username, )
+        result = data_manager.handle_database(get_id_query, data)
+        user_id = result['rows'][0][0]
+    return render_template('index.html', loggedin=loggedin, username=username, user_id=user_id)
 
 
 @app.route('/search')
@@ -67,6 +80,85 @@ def food():
     else:
         return render_template('error.html', error='Error handling data. Try again!')
     return render_template('food.html', name=name, nutrient=nutrient, value=value, unit=unit)
+
+""""""
+
+
+@app.route('/registration')
+def registration():
+    return render_template('registration.html')
+
+
+@app.route('/registration/new', methods=['POST'])
+def add_new_registration():
+    new_username = request.form['new_user_name']
+    new_password = request.form['new_password']
+    username_check_query = """SELECT username FROM proman_users WHERE username=%s"""
+    data = (new_username, )
+    result = data_manager.handle_query(username_check_query, data)
+    if result['result'] == 'success':
+        if result['row_count'] == 0:
+            if request.form['new_password'] != request.form['confirm_password']:
+                flash('Password confirmation failed. Please re-enter password!')
+                return render_template('registration.html', username=new_username)
+            else:
+                hashed_password = werkzeug.security.generate_password_hash(new_password, method='pbkdf2:sha256',
+                                                                           salt_length=8)
+                query = """INSERT INTO proman_users (username, password, submission_time) VALUES (%s, %s, %s)"""
+                submission_time = str(datetime.now())[:-7]
+                data = (new_username, hashed_password, submission_time)
+                insert_check_result = data_manager.handle_query(query, data)
+                if insert_check_result['result'] == 'success':
+                    insert_check_query = """SELECT username FROM proman_users WHERE username = %s"""
+                    data = (new_username, )
+                    result = data_manager.handle_database(insert_check_query, data)
+                    if result:
+                        info = True
+                        return render_template('registration.html', info=info)
+                    else:
+                        return render_template('error.html', error=result['result'])
+                else:
+                    return render_template('error.html', error=result['result'])
+        else:
+            flash('Username already in database! Choose another username')
+            return redirect(url_for('registration'))
+    else:
+        return render_template('error.html', error=result['result'])
+    return redirect('/')
+
+
+@app.route('/login', methods=['GET'])
+def get_login():
+    return render_template('login.html')
+
+
+@app.route('/login', methods=['POST'])
+def post_login():
+    user_name = request.form['user_name']
+    password = request.form['password']
+    get_user_query = """SELECT id, username, password FROM diet_users WHERE username=%s"""
+    data = (user_name, )
+    user = data_manager.handle_query(get_user_query, data)
+    if user['result'] == 'success':
+        if user['row_count'] != 0:
+            if werkzeug.security.check_password_hash(user['rows'][0][2], password):
+                session['username'] = user_name
+                return redirect('/')
+            else:
+                flash('Authentification failed. Try to login again!')
+                return redirect(url_for('get_login'))
+        else:
+            flash('Username not registered. Try to login again!')
+            return redirect(url_for('get_login'))
+    else:
+        return render_template('error.html', error=user['result'])
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('list_boards'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

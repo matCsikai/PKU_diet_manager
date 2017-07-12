@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Log in</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-1.12.4.js" defer></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" defer></script>
+</head>
+
+<body>
+    <div class="text-center login-letters">
+        <h1>Log in</h1>
+
+        <form action="/login" method="post">
+            <p>
+                <label for="user_name">Please enter your username</label>
+            </p>
+            <p>
+                <input name="user_name" id="user_name" maxlength="15" minlength="4" autofocus required>
+            </p>
+            <p>
+                <label for="password">Please enter your password</label>
+            </p>
+            <p>
+                <input name="password" id="password" type="password" maxlength="15" minlength="5" required>
+            </p>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                        <div class="alert alert-warning alert-dismissable" role="alert" >
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong>{{ message }}</strong>
+                        </div>                    
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+            <p>    
+                <input type="submit" value="Log in"class="btn-info">
+            </p>
+        </form>
+        <a href="/" class="btn-info">Cancel</a>
+    </div>
+</body>
+
+</html>
