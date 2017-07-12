@@ -1,10 +1,9 @@
 '''
 TODO:
-login button
 extend html 
-fix navbar right 
+fix navbar right at all html files
 loading...
-fix html titles
+jumbotron
 '''
 
 
