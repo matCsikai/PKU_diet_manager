@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block title %}Search{% endblock %} {% block content %}
-<div>
+<div class="jumbotron">
     {% for result in results %}
     <p><a href="/food?ndbno={{result['ndbno']}}"> {{ result['name'] }}</p>
         {% endfor %}

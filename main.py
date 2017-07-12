@@ -1,13 +1,3 @@
-'''
-TODO:
-extend html 
-fix navbar right at all html files
-loading... for all files
-jumbotron
-remove prismartic.ico from htmls
-'''
-
-
 #import sys
 #import os
 #import common
