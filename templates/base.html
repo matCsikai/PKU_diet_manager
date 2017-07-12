@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/style/style.css">
+    <script src="https://use.fontawesome.com/3de7ee354e.js" defer></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js" defer></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='script/js.js') }}" defer></script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+                <a class="navbar-brand" href="#">PKU Diet manager</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <form class="navbar-form navbar-left" id="searchform" action="/search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" name="search">
+                    </div>
+                    <button type="submit" class="btn btn-default" id="submitbutton">Submit</button>
+                </form>
+
+                <ul class="nav navbar-nav navbar-right">
+                    {% if loggedin == True %}
+                    <li id="user_name">
+                        <p class="navbar-text"> Logged in as {{ username }} </p>
+                    </li>
+                    <li>
+                        <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Log out</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> Log in</a>
+                    </li>
+                    <li>
+                        <a href="/registration"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <div id="loader"></div>
+
+</body>
+
+</html>
