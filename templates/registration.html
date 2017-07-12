@@ -24,7 +24,7 @@
                                 <h4>Registration successful!</h4>
                             </div>
                             <div class="modal-body text-center">
-                                <a href="/login/" class="btn btn-info close-modal" role="button">Login</a>
+                                <a href="/login" class="btn btn-info close-modal" role="button">Login</a>
                             </div>
                         </div>
                     </div>
@@ -63,6 +63,13 @@
                     {% endif %}
                 {% endwith %}
             </p>
+            <p>
+                <label for="tolerance">Please enter your Phe tolerance</label>
+            </p>
+            <p>
+                <input type="number" name="tolerance" id="tolerance" max="1000" min="20" required autofocus>
+            </p>
+            
             <p>    
                 <input type="submit" value="Register user" class="btn-info">
             </p>

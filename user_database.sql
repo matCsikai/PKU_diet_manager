@@ -16,7 +16,7 @@ CREATE TABLE diet_users (
     password varchar(120),
     submission_time timestamp without time zone,
 	tolerance int,
-	CHECK (tolerance > 20 AND tolerance < 1000)
+	CHECK (tolerance > 19 AND tolerance < 1001)
 );
 
 

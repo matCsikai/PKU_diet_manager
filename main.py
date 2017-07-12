@@ -28,6 +28,11 @@ app.secret_key = 'A0Zr98j/3yX R~XHa!jmN]LWX/,?RT'
 
 @app.route('/')
 def index():
+    user_data = get_user_data()
+    return render_template('index.html', loggedin=user_data["loggedin"], username=user_data["username"], user_id=user_data["user_id"])
+
+
+def get_user_data():
     loggedin = False
     username = ""
     user_id = ""
@@ -38,8 +43,7 @@ def index():
         data = (username, )
         result = data_manager.handle_database(get_id_query, data)
         user_id = result['rows'][0][0]
-    return render_template('index.html', loggedin=loggedin, username=username, user_id=user_id)
-
+    return {"loggedin": loggedin, "username": username, "user_id": user_id}
 
 @app.route('/search')
 def search():
@@ -51,27 +55,27 @@ def search():
         result_list = []
         for result in results['list']['item']:
             ndbno = result['ndbno']
-            query = 'http://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=' + API_KEY + '&nutrients=508&ndbno='+ ndbno
-            response = requests.get(query)
-            if response.status_code == 200:
-                results = response.json()
+            food_query = 'http://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=' + API_KEY + '&nutrients=508&ndbno='+ ndbno
+            food_response = requests.get(food_query)
+            if food_response.status_code == 200:
+                results = food_response.json()
                 if results['report']['total'] != 0:
                     result_list.append(result)
     else:
         return render_template('error.html', error='Error handling data. Try again!')
-    return render_template('search.html', results=result_list)
+    user_data = get_user_data()
+    return render_template('search.html', results=result_list, loggedin=user_data["loggedin"], username=user_data["username"], user_id=user_data["user_id"])
 
 
 @app.route('/food')
 def food():
     ndbno = request.args.get('ndbno')
-    query = 'http://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=' + API_KEY + '&nutrients=508&ndbno='+ ndbno
+    query = 'http://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=' + API_KEY + '&nutrients=508&ndbno='+ ndbno # query = url_to_api
     response = requests.get(query)
     if response.status_code == 200:
         result = response.json()
         name = result['report']['foods'][0]['name']
         nutrients = result['report']['foods'][0]['nutrients'][0]
-        print(nutrients)
         nutrient_id = nutrients['nutrient_id']
         unit = nutrients['unit']
         gm = nutrients['gm']
@@ -79,7 +83,8 @@ def food():
         nutrient = nutrients['nutrient']
     else:
         return render_template('error.html', error='Error handling data. Try again!')
-    return render_template('food.html', name=name, nutrient=nutrient, value=value, unit=unit)
+    user_data = get_user_data()
+    return render_template('food.html', name=name, nutrient=nutrient, gm=gm, loggedin=user_data["loggedin"], username=user_data["username"], user_id=user_data["user_id"])
 
 """"""
 
@@ -91,9 +96,10 @@ def registration():
 
 @app.route('/registration/new', methods=['POST'])
 def add_new_registration():
+    tolerance = request.form['tolerance']
     new_username = request.form['new_user_name']
     new_password = request.form['new_password']
-    username_check_query = """SELECT username FROM proman_users WHERE username=%s"""
+    username_check_query = """SELECT username FROM diet_users WHERE username=%s"""
     data = (new_username, )
     result = data_manager.handle_query(username_check_query, data)
     if result['result'] == 'success':
@@ -104,12 +110,12 @@ def add_new_registration():
             else:
                 hashed_password = werkzeug.security.generate_password_hash(new_password, method='pbkdf2:sha256',
                                                                            salt_length=8)
-                query = """INSERT INTO proman_users (username, password, submission_time) VALUES (%s, %s, %s)"""
+                query = """INSERT INTO diet_users (username, password, submission_time, tolerance) VALUES (%s, %s, %s, %s)"""
                 submission_time = str(datetime.now())[:-7]
-                data = (new_username, hashed_password, submission_time)
+                data = (new_username, hashed_password, submission_time, tolerance)
                 insert_check_result = data_manager.handle_query(query, data)
                 if insert_check_result['result'] == 'success':
-                    insert_check_query = """SELECT username FROM proman_users WHERE username = %s"""
+                    insert_check_query = """SELECT username FROM diet_users WHERE username = %s"""
                     data = (new_username, )
                     result = data_manager.handle_database(insert_check_query, data)
                     if result:
@@ -157,7 +163,7 @@ def post_login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    return redirect(url_for('list_boards'))
+    return redirect('/')
 
 
 if __name__ == '__main__':
