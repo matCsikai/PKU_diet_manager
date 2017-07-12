@@ -4,6 +4,7 @@ extend html
 fix navbar right at all html files
 loading...
 jumbotron
+remove prismartic.ico from htmls
 '''
 
 
