@@ -1,3 +1,13 @@
+'''
+TODO:
+login button
+extend html 
+fix navbar right 
+loading...
+fix html titles
+'''
+
+
 #import sys
 #import os
 #import common
